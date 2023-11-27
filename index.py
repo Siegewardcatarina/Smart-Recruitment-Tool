@@ -1,11 +1,16 @@
 import os
-import sys
+from secret import OPENAI_API_KEY
 from langchain.llms import OpenAI
 from langchain_experimental.agents.agent_toolkits import create_csv_agent
 from langchain.chains.conversation.memory import ConversationBufferMemory
+
+
 dataset = "./dataset/Employee.csv"
-key = "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"
-os.environ["OPENAI_API_KEY"] = key  # Fix the environment variable name
+os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
+
+dataset = "dataset\Cars.csv"
+model = "text-davinci-003"
+
 
 def app():
     # conversation memory
@@ -13,18 +18,14 @@ def app():
 
     while True:
         # Create CSV agent
-        agent = create_csv_agent(OpenAI(temperature=0), dataset, memory=memory, verbose=True)
-
+        agent = create_csv_agent(
+            OpenAI(temperature=0, model=model), memory=memory, verbose=True
+        )
         # user query
         print("Enter Query: ")
         query = input()
+        agent.run(query)
 
-        try:
-            # Process query 
-            agent.run(query)
-        except:
-            # If any error
-            print("Rate Limit Error")
 
 if __name__ == "__main__":
     app()

@@ -2,7 +2,6 @@ import os
 from secret import OPENAI_API_KEY
 from langchain.llms import OpenAI
 from langchain_experimental.agents.agent_toolkits import create_csv_agent
-# from langchain.chains.conversation.memory import ConversationBufferMemory
 
 os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY 
 
@@ -14,18 +13,17 @@ def create_agent():
     #Dataset
     dataset = "dataset\Employee.csv"
 
-    #Memory
-    # memory = ConversationBufferMemory()
-
+    #Creates the agent on function call with llm and dataset provided
     return create_csv_agent(llm,dataset,verbose=False)
 
 
 def query():
 
-    # user query
+    # Collect user query
     print("Enter Query Below : ")
     query = input()
 
+    # Add it with Pre-made prompt to get result in specific format
     prompt = (
         """
             For the following query, if it requires drawing a table, reply as follows:
@@ -70,10 +68,8 @@ def respond():
     agent = create_agent()
     # Run the prompt through the agent.
     response = agent.run(query())
-
     # Convert the response to a string.
-    print(response.__str__())
-
+    print(response)
 
 
 if __name__ == "__main__":

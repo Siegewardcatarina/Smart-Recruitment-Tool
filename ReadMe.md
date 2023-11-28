@@ -45,4 +45,7 @@ pip install -r requirements.txt
 
 ## Prompts
 1. "which employees are from bangalore"
-2. 
+2. Which car has the highest Sales_in_thousands?
+3. Tabulate the first 5 cars. Include the model and the Sales_in_thousands columns only.
+4. Create a pie chart, display percentage of employees of each role throughout the dataset
+5. 

@@ -1,20 +1,27 @@
 import os
 from secret import OPENAI_API_KEY
 from langchain.llms import OpenAI
+from langchain.globals import set_llm_cache
+from langchain.cache import InMemoryCache
 from langchain_experimental.agents.agent_toolkits import create_csv_agent
 
 os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY 
+set_llm_cache(InMemoryCache())
+
 
 def create_agent():
+    
+    #Model
+    model = "gpt-3.5-turbo-instruct"
 
     #LLM
-    llm = OpenAI(temperature = 0)
+    llm = OpenAI(temperature = 0, model=model)
 
     #Dataset
     dataset = "dataset\Employee.csv"
 
     #Creates the agent on function call with llm and dataset provided
-    return create_csv_agent(llm,dataset,verbose=False)
+    return create_csv_agent(llm,dataset,verbose=True)
 
 
 def query():
@@ -67,9 +74,10 @@ def query():
 def respond():
     agent = create_agent()
     # Run the prompt through the agent.
-    response = agent.run(query())
-    # Convert the response to a string.
-    print(response)
+    while True:
+        response = agent.run(query())
+        # Convert the response to a string.
+        print(response)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,125 @@
+!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <style>
+        body {
+            background-image: url('https://careers.brillio.com/wp-content/themes/brilliotheme/assets/why_brillionew-scaled.jpg');
+            margin: 0px;
+            padding: 0px;
+            box-sizing: border-box;
+        }
+
+        .topnav {
+            background-color: #000000;
+            height: 40px;
+            padding: 0px 30px;
+            margin-top: -16px;
+        }
+
+        .topnav li {
+            color: #22D374;
+            list-style: none;
+            font-weight: 300;
+            padding: 10px;
+        }
+
+        .brillioicon {
+            position: fixed;
+            height: 40px;
+            width: 100px;
+            right: 10px;
+        }
+
+        .register-container {
+            display: flex;
+            flex-direction: column;
+            width: 45%;
+            height: 45%;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+            background: rgba(0, 0, 0, 0.4);
+
+        }
+
+        .register-container h1 {
+            text-align: center;
+            color: #22D374;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+        }
+
+        button {
+            text-align: center;
+            background-color: #4CAF50;
+            width: 90px;
+            color: white;
+            padding: 15px;
+            margin: 10px 5%;
+            border: none;
+            cursor: pointer;
+            align-content: center;
+        }
+
+        inputbox {}
+
+        input[type=text], input[type=password], input[type=email] {
+            width: 70%;
+            align-items: center;
+            margin: 5px 5%;
+            padding: 12px 20px;
+            display: inline-block;
+            box-sizing: border-box;s
+        }
+        form label{
+            color: white;
+            display: inline-flex;
+            font-size: 18px;
+            margin-left: 10px;
+        }
+
+        .login-btn {
+            text-align: right;
+        }
+    </style>
+
+<body>
+    <header>
+        <div class="container">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Brillio_company_logo.png" class="brillioicon">
+            <nav class="topnav">
+                <ul>
+                    <li>SMART RECRUITMENT TOOL</li>
+
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <div class="register-container">
+        <form action="C:/Users/ADMIN/Desktop/smartrecruitment/promptPage.html">
+            <div class="register-box">
+                <h1>SIGN-UP</h1>
+                <div class="inputbox">
+                  <label>USERNAME: </label><input type="text" id="username" required>
+                  <label>PASSWORD: </label><input type="password" id="password" required>
+                  <label>E-MAIL:   </label><input type="email" id="email" required>
+                </div>
+                <div class="login-btn">
+                    <button type="submit" onclick="signupfunc()" class="button">SIGN-UP</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script>
+        function signupfunc() {
+            window.location.href = 'C:/Users/ADMIN/Desktop/smartrecruitment/smartrecruitmentlogin.html';
+        }
+
+    </script>
+</body>
+</head>
+
+</html>

@@ -42,7 +42,7 @@ pip install -r requirements.txt
 ![Employee Experience Prompt](results\employee_experience_prompt.JPG)
 
 ## Prompts
-1. How many employees are from bangalore
+1. How many employees are from bangalore?
    ```
    {"answer": "There are 87 employees from Bangalore."}
    ```

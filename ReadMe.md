@@ -62,3 +62,18 @@ pip install -r requirements.txt
    ```
    {"bar": {"columns": ["Data scientist", "DevOps engineer"], "data": [176, 79]}}
    ```
+
+In-Context Coversation
+
+1. How many employees are from Mumbai?
+```
+{"answer": "There are 155 employees from Mumbai."}
+```
+2. Out of the 155, how many have 10 years of experience?
+```
+What are the unique roles of those 22 employees?
+```
+3. What are the unique roles of those 22 employees?
+```
+The unique roles of the 22 employees in Mumbai are AI/ML architect, Security Analyst, Data scientist, Cyber security, Frontend developer, Blockchain engineer, IoT solutions architect, HR, DevOps engineer, Machine learning engineer, and Cloud architect.
+```

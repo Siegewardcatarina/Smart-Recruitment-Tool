@@ -39,7 +39,7 @@ dataset = "./dataset/Employee.csv"
 memory = ConversationBufferMemory()
 
 app.config['SECRET_KEY'] = '43ee078a2665428e8ad5aa1695f953df'
-app.config['MONGO_URI'] = ''
+app.config['MONGO_URI'] = 'mongodb+srv://newuser:sasheela0@cluster0.aqs612f.mongodb.net/?retryWrites=true&w=majority'
 mongo = PyMongo(app)
 bcrypt = Bcrypt(app)
 # csrf = CSRFProtect(app)
@@ -156,7 +156,7 @@ def register():
 
 
     try:
-        client = MongoClient("")
+        client = MongoClient("mongodb+srv://newuser:sasheela0@cluster0.aqs612f.mongodb.net/?retryWrites=true&w=majority")
         db = client["users"]
         collection = db["users"]
         existing_user = collection.find_one({'email': email})
@@ -212,7 +212,7 @@ def login():
         return jsonify({'error': 'Missing email or password'}), 400
 
     # Check if the user with the provided email exists
-    client = MongoClient("")
+    client = MongoClient("mongodb+srv://newuser:sasheela0@cluster0.aqs612f.mongodb.net/?retryWrites=true&w=majority")
     db = client["users"]
     collection = db["users"]
     user = db.users.find_one({'email': email})

@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { Button, Col, Form, FormGroup, Input, Label, Row } from "reactstrap";
 import "./App.css";
 import ControlledAccordions from "./ControlledAccordions";
-// import "./LoginRegisterPage.css";
 
+import "./result.css"; // Import the CSS file for styling
 function Result(props) {
   const [inputText, setInputText] = useState("");
   const [result, setResult] = useState(null);
@@ -119,7 +119,25 @@ function Result(props) {
   ];
 
   return (
-    <div className="login-register-page">
+    <div>
+      <div>
+    <div class="container">
+    <nav class="topnav">
+        <ul>
+            <li>SMART RECRUITMENT TOOL</li>
+        </ul>
+    </nav>
+    <img className="logo" src={"https://upload.wikimedia.org/wikipedia/commons/9/91/Brillio_company_logo.png"} />       
+     </div>
+     </div>
+    <div className="login-register-page result">
+    <Row className="btn-container" >
+  <div>
+    <Button color="danger" onClick={handleLogout}>
+      Logout
+    </Button>
+  </div>
+</Row>
       <Row>
         <div>
           <div style={{ marginBottom: "0.5rem" }}>
@@ -168,7 +186,7 @@ function Result(props) {
               placeholder="Enter text"
             />
           </FormGroup>
-          <div style={{ marginBottom: "0.5rem" }}>
+          <div  className="btn-container"  style={{ marginBottom: "0.5rem" }}>
             <Button type="submit" color="primary">
               Submit
             </Button>
@@ -194,13 +212,8 @@ function Result(props) {
           </div>
         )}
       </Row>
-      <Row>
-        <div>
-          <Button color="danger" onClick={handleLogout}>
-            Logout
-          </Button>
-        </div>
-      </Row>
+      
+    </div>
     </div>
   );
 }

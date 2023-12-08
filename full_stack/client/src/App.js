@@ -1,9 +1,9 @@
 // LoginRegisterPage.jsx
 import axios from "axios";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+// import "react-toastify/dist/ReactToastify.css";
 import { Button, Container, Form, FormGroup, Input } from "reactstrap";
 import "./LoginRegisterPage.css"; // Import the CSS file for styling
 const LoginRegisterPage = (props) => {
@@ -49,6 +49,7 @@ const LoginRegisterPage = (props) => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
+    navigate("/recruit");
     try {
       const response = await axios.post(
         "http://localhost:5000/login",
@@ -89,10 +90,21 @@ const LoginRegisterPage = (props) => {
   };
 
   return (
+  <div>
+    <div>
+    <div class="container">
+            <nav class="topnav">
+                <ul>
+                    <li>SMART RECRUITMENT TOOL</li>
+                </ul>
+            </nav>
+            <img className="logo" src={"https://upload.wikimedia.org/wikipedia/commons/9/91/Brillio_company_logo.png"} />        </div>
+    </div>
+    <div>
     <div className="login-register-page">
       <Container>
         <Form className="login-register-form">
-          <h1>Login</h1>
+        <h1 className="login-heading">Login</h1>
           {/* {emptyInputError && (
             <Alert color="danger">
               Please enter both username and password.
@@ -104,7 +116,7 @@ const LoginRegisterPage = (props) => {
           <FormGroup
             className={`custom-input ${emptyInputError ? "error" : ""}`}
           >
-            <Input
+            <Input className="input-box"
               style={{ marginBottom: "0.5rem" }}
               type="text"
               value={formData.email}
@@ -117,7 +129,7 @@ const LoginRegisterPage = (props) => {
           <FormGroup
             className={`custom-input ${emptyInputError ? "error" : ""}`}
           >
-            <Input
+            <Input className="input-box"
               style={{ margin: "0.5rem" }}
               type="password"
               value={formData.password}
@@ -130,7 +142,6 @@ const LoginRegisterPage = (props) => {
           <div>
             <Button
               className="btn-primary"
-              style={{ marginLeft: "12rem", marginRight: "0.5rem" }}
               color="primary"
               onClick={handleLogin}
             >
@@ -144,6 +155,8 @@ const LoginRegisterPage = (props) => {
       </Container>
       <ToastContainer />
     </div>
+    </div>
+  </div>
   );
 };
 

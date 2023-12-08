@@ -4,17 +4,13 @@ from langchain.llms import OpenAI
 from langchain.globals import set_llm_cache
 from langchain.cache import InMemoryCache
 from langchain_experimental.agents.agent_toolkits import create_csv_agent
-#
+from langchain.agents.agent_types import AgentType
 from langchain.agents import AgentExecutor, Tool, ZeroShotAgent
 from langchain.chains import LLMChain
 from langchain.memory import ConversationBufferMemory
 
 os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY 
 set_llm_cache(InMemoryCache())
-
-#
-
-#
 
 def create_agent():
     
@@ -28,7 +24,7 @@ def create_agent():
     dataset = "dataset\Employee.csv"
 
     #Creates the agent on function call with llm and dataset provided
-    return create_csv_agent(llm,dataset,verbose=False)
+    return create_csv_agent(llm,dataset,verbose=True,agent_type=AgentType.ZERO_SHOT_REACT_DESCRIPTION,handle_parsing_errors=True)
 
 
 def query():
@@ -84,15 +80,47 @@ def respond():
         Tool(
             name="Search",
             func=agent.run,
-            description="useful for when you need to answer questions about current events",
+            description="useful for when you need to answer questions",
         )
     ]
-    prefix = """Have a conversation with a human, answering the following questions as best you can. You have access to the following tools:"""
-    suffix = """Begin!"
+    prefix = """Have a conversation with a human, answering the following questions as best you can.For the below query, if it requires drawing a table, reply as follows:
+            {{"table": {{"columns": ["column1", "column2", ...], "data": [[value1, value2, ...], [value1, value2, ...], ...]}}}}
+
+            If the query requires creating a bar chart, reply as follows:
+            {{"bar": {{"columns": ["A", "B", "C", ...], "data": [25, 24, 10, ...]}}}}
+
+            If the query requires creating a line chart, reply as follows:
+            {{"line": {{"columns": ["A", "B", "C", ...], "data": [25, 24, 10, ...]}}}}
+
+            If the query requires creating a pie chart, reply as follows:
+            {{"pie": {{"columns": ["A", "B", "C", ...], "data": [25%, 24%, 10%, ...]}}}}
+
+            There can only be three types of chart, "pie", "bar" and "line".
+
+            If it is just asking a question that requires none, reply as follows:
+            {{"answer": "answer"}}
+            Example:
+            {{"answer": "The title with the highest rating is 'Gilead'"}}
+
+            If you do not know the answer, reply as follows:
+            {{"answer": "I do not know."}}
+
+            Return all output as a string.
+
+            All strings in "columns" list and data list, should be in double quotes,
+
+            For example: {{"columns": ["title", "ratings_count"], "data": [["Gilead", 361], ["Spider's Web", 5164]]}}
+
+            Lets think step by step.
+            All output should be in the above format.
+
+            You have access to the following tools, use them always!:"""
+    suffix = """Begin! Remember to use the tool provided!"
     
-    {chat_history}
-    Question: {input}
-    {agent_scratchpad}"""
+            Here is the previous chat history:
+            {chat_history}
+            Question: {input}
+            {agent_scratchpad}"""
 
     prompt = ZeroShotAgent.create_prompt(
         tools,
@@ -103,19 +131,13 @@ def respond():
     memory = ConversationBufferMemory(memory_key="chat_history")
 
     llm_chain = LLMChain(llm=OpenAI(temperature=0), prompt=prompt)
-    agent = ZeroShotAgent(llm_chain=llm_chain, tools=tools, verbose=True)
+    agent = ZeroShotAgent(llm_chain=llm_chain, tools=tools, verbose=False,handle_parsing_errors=True)
     agent_chain = AgentExecutor.from_agent_and_tools(
-        agent=agent, tools=tools, verbose=True, memory=memory
+        agent=agent, tools=tools, verbose=False, memory=memory,handle_parsing_errors=True
     )
     while True:
         response = agent_chain.run(query())
         print(response)
-
-    # Run the prompt through the agent.
-    # while True:
-    #     response = agent.run(query())
-    #     # Convert the response to a string.
-    #     print(response)
 
 
 if __name__ == "__main__":

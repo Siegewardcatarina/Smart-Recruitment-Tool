@@ -16,6 +16,9 @@ The Dataset contains various attributes of potential candidates such as:
 - Location
 
 ## LLM
+
+![Model Diagram](results\Model.JPG)
+
 [OpenAI](https://platform.openai.com/docs/api-reference) is the LLM that is used in this project.
 
 A Zero Shot Agent is used to perform retrieval tasks on the dataset. It acts on current action only and has no memory, it uses ReAct framework to decide which tool to use, based on tool's description.
@@ -40,6 +43,8 @@ pip install -r requirements.txt
 ## Sample Output
 
 ![Employee Experience Prompt](results\employee_experience_prompt.JPG)
+
+![Memory Prompt](results\In-Context_Memory_result.jpeg)
 
 ## Prompts
 1. How many employees are from bangalore?

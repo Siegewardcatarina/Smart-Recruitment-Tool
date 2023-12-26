@@ -22,7 +22,9 @@ import datetime
 from datetime import datetime, timedelta, timezone
 from functools import wraps
 from flask_jwt_extended import create_access_token,get_jwt,get_jwt_identity,unset_jwt_cookies, jwt_required, JWTManager
-
+# from secret import OPENAI_API_KEY
+from langchain.llms import OpenAI
+from langchain_experimental.agents.agent_toolkits import create_csv_agent
 
 
 app = Flask(__name__)
@@ -31,7 +33,7 @@ CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})  # Allow requ
 
 
 # Set up your OpenAI API key
-key = "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"
+key = "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"
 os.environ["OPENAI_API_KEY"] = key
 dataset = "./dataset/Employee.csv"
 
@@ -39,7 +41,7 @@ dataset = "./dataset/Employee.csv"
 memory = ConversationBufferMemory()
 
 app.config['SECRET_KEY'] = '43ee078a2665428e8ad5aa1695f953df'
-app.config['MONGO_URI'] = 'mongodb+srv://newuser:sasheela0@cluster0.aqs612f.mongodb.net/?retryWrites=true&w=majority'
+app.config['MONGO_URI'] = 'mongodb+srv://username:sasheela0@cluster0.aqs612f.mongodb.net/?retryWrites=true&w=majority'
 mongo = PyMongo(app)
 bcrypt = Bcrypt(app)
 # csrf = CSRFProtect(app)
@@ -77,6 +79,7 @@ except Exception as e:
 #             "password": hashed_password
 #         }
 #         # Connect to MongoDB and insert user data
+#         client = PyMongo.MongoClient("mongodb+srv://<kssathya>:<Kaushik963123>@cluster0.aqs612f.mongodb.net/?retryWrites=true&w=majority")
 #         db = client["users"]
 #         collection = db["users"]
 #         collection.insert_one(user_data)
@@ -105,7 +108,7 @@ def token_required(f):
             print("Secret Key:", app.config['SECRET_KEY'])
             data = jwt.decode(token, app.config['SECRET_KEY'])
             print("Decoded data",data)
-            client = MongoClient("")
+            client = MongoClient("mongodb+srv://newuser:sasheela0@cluster0.aqs612f.mongodb.net/?retryWrites=true&w=majority")
             db = client["users"]
             current_user = db.users.find_one({'_id': data['_id']})
         except jwt.ExpiredSignatureError:
@@ -236,25 +239,77 @@ def logout():
     response = jsonify({"msg": "logout successful"})
     unset_jwt_cookies(response)
     return response
+def create_agent():
 
-def process_text():
+    #LLM
+    llm = OpenAI(temperature = 0)
+
+    #Dataset
+    dataset = "dataset\Employee.csv"
+
+    #Creates the agent on function call with llm and dataset provided
+    return create_csv_agent(llm,dataset,verbose=False)
+
+def query():
     data = request.get_json()
     text = data['text']
+    # Collect user query
+    # print("Enter Query Below : ")
+    # query = input()
 
-    print("Received text from frontend:", text)
+    # Add it with Pre-made prompt to get result in specific format
+    prompt = (
+        """
+            For the following query, if it requires drawing a table, reply as follows:
+            {"table": {"columns": ["column1", "column2", ...], "data": [[value1, value2, ...], [value1, value2, ...], ...]}}
 
+            If the query requires creating a bar chart, reply as follows:
+            {"bar": {"columns": ["A", "B", "C", ...], "data": [25, 24, 10, ...]}}
+
+            If the query requires creating a line chart, reply as follows:
+            {"line": {"columns": ["A", "B", "C", ...], "data": [25, 24, 10, ...]}}
+
+            If the query requires creating a pie chart, reply as follows:
+            {"pie": {"columns": ["A", "B", "C", ...], "data": [25, 24, 10, ...]}}
+
+            There can only be three types of chart, "pie", "bar" and "line".
+
+            If it is just asking a question that requires none, reply as follows:
+            {"answer": "answer"}
+            Example:
+            {"answer": "The title with the highest rating is 'Gilead'"}
+
+            If you do not know the answer, reply as follows:
+            {"answer": "I do not know."}
+
+            Return all output as a string.
+            If there is no "columns" list, display output in format given else,
+            All strings in "columns" list and data list, should be in double quotes,
+
+            For example: {"columns": ["title", "ratings_count"], "data": [["Gilead", 361], ["Spider's Web", 5164]]}
+
+            Lets think step by step.
+
+            Below is the query.
+            Query: 
+            """
+        + text
+    )
+    return prompt
+
+
+def process_text():
     try:
-        # Create CSV agent
-        openai_instance = OpenAI(temperature=0)  # Instantiate OpenAI outside the agent creation
-        agent = create_csv_agent(openai_instance, dataset, memory=memory, verbose=True)
-
-        # Process the given query
-        result = agent.run(text)
-        print('The given result is \n', result)
+        agent = create_agent()
+    # Run the prompt through the agent.
+        response = agent.run(query())
+    # Convert the response to a string.
+        print(response)
+        print('The given result is \n', response)
 
         response_data = {
-            'result': result,
-            'total_length': len(result)
+            'result': response,
+            'total_length': len(response)
         }
         # Return the result as JSON response
         return jsonify(response_data)  

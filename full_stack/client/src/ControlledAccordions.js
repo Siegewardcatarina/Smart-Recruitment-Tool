@@ -9,7 +9,7 @@ import * as React from "react";
 
 const ControlledAccordions = ({ accordionData }) => {
   const [expanded, setExpanded] = React.useState([]);
-
+  console.log(accordionData);
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded((prevExpanded) => {
       const newExpanded = [...prevExpanded];

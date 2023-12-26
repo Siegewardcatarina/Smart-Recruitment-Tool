@@ -2,7 +2,6 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
-import "./register.css"; // Import the CSS file for styling
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -14,7 +13,7 @@ const Register = () => {
     // csrf_token: "", // Include CSRF token in the form state
   });
   const navigate = useNavigate();
- 
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -52,19 +51,8 @@ const Register = () => {
 
   return (
     <div>
-      <div>
-    <div class="container">
-    <nav class="topnav">
-        <ul>
-            <li>SMART RECRUITMENT TOOL</li>
-        </ul>
-    </nav>
-    <img className="logo" src={"https://upload.wikimedia.org/wikipedia/commons/9/91/Brillio_company_logo.png"} />       
-     </div>
-     </div>
- <div className="register-container">
       <h1>Registration</h1>
-      <form className="form-container" onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <label htmlFor="name">Name:</label>
         <input
           type="text"
@@ -115,14 +103,13 @@ const Register = () => {
           required
         />
 
-        <button className="submit-btn" type="submit">Register</button>
+        <button type="submit">Register</button>
       </form>
 
-      <p className="login-link">
+      <p>
         Already have an account? <a href="/">Log in here</a>.
       </p>
       <ToastContainer />
-    </div>
     </div>
   );
 };

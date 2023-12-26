@@ -1,18 +1,59 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
 import { Button, Col, Form, FormGroup, Input, Label, Row } from "reactstrap";
-import "./App.css";
+// import "./App.css";
+import Paper from "@mui/material/Paper";
+import Grid from "@mui/material/Unstable_Grid2";
+import { styled } from "@mui/material/styles";
 import ControlledAccordions from "./ControlledAccordions";
+import Instructions from "./Instructions";
+// import "./LoginRegisterPage.css";
+import { Stack } from "@mui/material";
+import Bar from "./Bar";
+import Line from "./Line";
+import MyChart from "./Pie";
+import Example from "./Table";
 
-import "./result.css"; // Import the CSS file for styling
 function Result(props) {
   const [inputText, setInputText] = useState("");
+  const [promptCount, setPromptCount] = useState(0); // State to track prompt count
   const [result, setResult] = useState(null);
   const [accordionData, setAccordionData] = useState([]);
+  const [tableData, setTableData] = useState([]);
   const [accordion, setAccordion] = useState(-1);
   const navigate = useNavigate();
-  const [expanded, setExpanded] = useState({});
+  // const [expanded, setExpanded] = useState({});
+  const [originalData, setOriginalData] = useState(null);
+  const [pieData, setPieData] = useState([]);
+  const [LineData, setLineData] = useState([]);
+  const [columns, setColumns] = useState([]);
+  const [rowd, setRows] = useState([]);
+  const [barData, setBarData] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [inputPrompt, setInputPrompt] = useState([]);
+  const [expanded, setExpanded] = React.useState([]);
+
+  const handleChange = (panel) => (event, isExpanded) => {
+    setExpanded((prevExpanded) => {
+      const newExpanded = [...prevExpanded];
+      newExpanded[panel] = isExpanded;
+      return newExpanded;
+    });
+  };
+
+  const Item = styled(Paper)(({ theme }) => ({
+    backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+    ...theme.typography.body2,
+    padding: theme.spacing(1),
+    textAlign: "center",
+    color: theme.palette.text.secondary,
+  }));
+
+  const handleModalOpen = () => {
+    setModalOpen(true);
+  };
 
   const handleLogout = async () => {
     // Perform your logout logic here
@@ -33,6 +74,7 @@ function Result(props) {
   }
 
   const handleInputChange = (e) => {
+    e.preventDefault();
     setInputText(e.target.value);
   };
 
@@ -55,17 +97,86 @@ function Result(props) {
       );
       // const { result, total_length } = response.data;
       console.log(response.data);
+      console.log(typeof response.data.result);
+      let resultString = response.data.result; // Change variable name to avoid confusion
       if (typeof response.data.result === "string") {
-        setResult(response.data.result.split(", "));
+        if (
+          resultString.startsWith('{"answer": "') &&
+          resultString.endsWith('"}')
+        ) {
+          const answerText = resultString.substring(
+            11,
+            resultString.length - 2
+          );
+          const newAccordionData = [
+            ...accordionData,
+            { prompt: inputText, result: answerText },
+          ];
+          setAccordionData(newAccordionData);
+          setAccordionData(newAccordionData);
+          setResult(answerText);
+          setPromptCount((prevCount) => prevCount + 1);
+        }
+        if (resultString.startsWith('{"table":')) {
+          console.log(resultString);
+        }
+        if (resultString.startsWith('{"pie":')) {
+          const parsedData = JSON.parse(resultString);
+          console.log(parsedData);
+          // Extract the data array from the parsed JSON
+          const originalData = parsedData.pie.data;
+          console.log(originalData);
+          // Create a new formatted array
+          const formattedData = originalData.map((item) => ({
+            name: item[0],
+            value: item[1] * 1000, // You can adjust the multiplier based on your specific needs
+          }));
+          setPieData(originalData);
+          console.log(formattedData);
+        }
+        if (resultString.startsWith('{"bar":')) {
+          const parsedData = JSON.parse(resultString);
+          console.log(parsedData);
+          // Extract the data array from the parsed JSON
+          const originalData = parsedData.bar;
+          console.log(originalData);
+          // Create a new formatted array
+          setLineData(originalData);
+        }
+        if (resultString.startsWith('{"line":')) {
+          const parsedData = JSON.parse(resultString);
+          console.log(parsedData);
+          // Extract the data array from the parsed JSON
+          const originalData = parsedData.line;
+          console.log(originalData);
+          // Create a new formatted array
+          setBarData(originalData);
+        }
+        // let responseString = response.data.result; // Change variable name to avoid confusion
+        // responseString = responseString.replace(/^{"answer": "|"}$/g, ""); // Remove leading and trailing quotes, curly brackets
+        // setResult(responseString);
+
+        // } else if (response.data.result.hasOwnProperty("pie")) {
+        //   // Handle pie chart case
+        //   const pieChartData = response.data.result.pie;
+        //   // Process pieChartData...
+        // } else if (response.data.result.hasOwnProperty("line")) {
+        //   // Handle line chart case
+        //   const lineChartData = response.data.result.line;
+        //   // Process lineChartData...
+        // } else if (response.data.result.hasOwnProperty("bar")) {
+        //   // Handle bar chart case
+        //   const barChartData = response.data.result.bar;
+        //   // Process barChartData...
+        // } else if (response.data.result.hasOwnProperty("table")) {
+        //   // Handle table case
+        //   const tableData = response.data.result.table;
+        //   // Process tableData...
       } else {
         setResult([response.data.result]); // If not a string, treat it as a single item array
       }
-      const newAccordionData = [
-        ...accordionData,
-        { prompt: prompt, result: response.data.result },
-      ];
-      setAccordionData(newAccordionData);
-      console.log(newAccordionData);
+      console.log(result);
+      // console.log(newAccordionData);
     } catch (error) {
       console.error("Error sending request to the backend:", error);
     }
@@ -87,20 +198,116 @@ function Result(props) {
           },
         }
       );
-      console.log(response.data);
-      if (typeof response.data.result === "string") {
-        setResult(response.data.result.split(", "));
+      console.log(response.data.result);
+      if (response.data.result !== undefined) {
+        let resultString = response.data.result;
+        console.log(resultString); // Change variable name to avoid confusion
+        if (typeof response.data.result === "string") {
+          if (resultString.startsWith('{"answer": "')) {
+            const answerText = resultString.substring(
+              11,
+              resultString.length - 2
+            );
+            console.log(answerText);
+            setResult(answerText);
+            const newAccordionData = [
+              ...accordionData,
+              { prompt: inputText, result: answerText },
+            ];
+            setAccordionData(newAccordionData);
+            console.log(accordionData);
+          }
+          if (resultString.startsWith('{"table":')) {
+            console.log(resultString);
+            const parsedData = JSON.parse(resultString);
+            // console.log(parsedData);
+            const cols = parsedData.table.columns;
+            const rows = parsedData.table.data;
+            // console.log(cols);
+            setColumns(cols);
+            const ROW = parsedData.table.data.map((row, index) => ({
+              id: index + 1,
+              ...Object.fromEntries(
+                cols.map((col, i) => [
+                  col.toLowerCase().replace(" ", "_"),
+                  row[i],
+                ])
+              ),
+            }));
+            setRows(ROW);
+            console.log(ROW);
+            console.log(columns);
+            setInputPrompt(inputText);
+            setTableData((prevTableData) => [
+              ...prevTableData,
+              { prompt: inputText, row: ROW, column: cols },
+            ]);
+          }
+          if (resultString.startsWith('{"pie":')) {
+            const parsedData = JSON.parse(resultString);
+            console.log(parsedData);
+            // Extract the data array from the parsed JSON
+            const originalData = parsedData.pie;
+            const columns = parsedData.pie.columns;
+            const data = parsedData.pie.data;
+
+            console.log(originalData);
+
+            // Create a new formatted array
+            const formattedData = data.map((entry) => ({
+              name: entry[0], // Use the first element as the "name"
+              value: entry[1] * 100, // Use the second element as the "value" (adjusted by a multiplier if needed)
+            }));
+
+            console.log(formattedData);
+            setInputPrompt(inputText);
+            setPieData((prevPieData) => [
+              ...prevPieData,
+              { prompt: inputText, data: formattedData },
+            ]);
+            console.log(pieData);
+          }
+          if (resultString.startsWith('{"bar":')) {
+            const parsedData = JSON.parse(resultString);
+            console.log(parsedData);
+            // Extract the data array from the parsed JSON
+            const originalData = parsedData.bar;
+            console.log(originalData);
+            // Create a new formatted array
+            setLineData((prevBarData) => [
+              ...prevBarData,
+              { prompt: inputText, data: originalData },
+            ]);
+            console.log(LineData);
+          }
+          if (resultString.startsWith('{"line":')) {
+            const parsedData = JSON.parse(resultString);
+            console.log(parsedData);
+            // Extract the data array from the parsed JSON
+            const originalData = parsedData.line;
+            console.log(originalData);
+            // Create a new formatted array
+            // setBarData(originalData);
+            setBarData((prevBarData) => [
+              ...prevBarData,
+              { prompt: inputText, data: originalData },
+            ]);
+            console.log(barData);
+            // console.log(inputPrompt);
+          }
+        } else {
+          setResult([response.data.result]); // If not a string, treat it as a single item array
+        }
       } else {
-        setResult([response.data.result]); // If not a string, treat it as a single item array
+        toast.error("Please try again");
       }
-      const newAccordionData = [
-        ...accordionData,
-        { prompt: inputText, result: response.data.result },
-      ];
-      setAccordionData(newAccordionData);
-      console.log(newAccordionData);
     } catch (error) {
-      console.error("Error sending request to the backend:", error);
+      toast.error("Please try again");
+      console.log(error.response.data.msg);
+      console.error(
+        "Error sending request to the backend:",
+        error.response.data.msg
+      );
     }
   };
 
@@ -112,108 +319,185 @@ function Result(props) {
     }
   };
 
+  const renderTableItems = () => {
+    // console.log(columns);
+    if (columns && rowd && columns.length > 0) {
+      console.log(rowd);
+      return (
+        <Example
+          data={tableData}
+          input={inputPrompt}
+          rows={rowd}
+          columns={columns}
+        />
+      );
+    } else {
+      return null; // Or you can render a message or anything else when accordionData is null or empty
+    }
+  };
+
+  const renderPieItems = () => {
+    // console.log(pieData);
+    if (pieData && pieData.length > 0) {
+      console.log(pieData);
+      return <MyChart input={inputPrompt} piedata={pieData} />;
+    } else {
+      return null; // Or you can render a message or anything else when accordionData is null or empty
+    }
+  };
+
+  const renderLineItems = () => {
+    console.log(LineData);
+    if (LineData) {
+      const latestEntry = accordionData[accordionData.length - 1];
+      console.log(LineData);
+      return <Line input={accordionData} linedata={LineData} />;
+    } else {
+      return null; // Or you can render a message or anything else when accordionData is null or empty
+    }
+  };
+
+  const renderBarItems = () => {
+    // console.log(barData);
+    if (barData) {
+      const latestEntry = accordionData[accordionData.length - 1];
+      console.log(barData);
+      return <Bar input={inputPrompt} barData={barData} />;
+    } else {
+      return null; // Or you can render a message or anything else when accordionData is null or empty
+    }
+  };
+
   const prompts = [
+    "Click on the question Icon for instructions",
     "Give me names of employees from bangalore.",
     "Give me names of employees whose role is AI/ML architect with 3 years experience",
     "Give me number of employees whose stay in Jaipur",
+    // "Create a table where you give me the name of employees and experience of employees whose role is Cyber security and location is bangalore",
   ];
-
   return (
     <div>
-      <div>
-    <div class="container">
-    <nav class="topnav">
-        <ul>
-            <li>SMART RECRUITMENT TOOL</li>
-        </ul>
-    </nav>
-    <img className="logo" src={"https://upload.wikimedia.org/wikipedia/commons/9/91/Brillio_company_logo.png"} />       
-     </div>
-     </div>
-    <div className="login-register-page result">
-    <Row className="btn-container" >
-  <div>
-    <Button color="danger" onClick={handleLogout}>
-      Logout
-    </Button>
-  </div>
-</Row>
-      <Row>
-        <div>
-          <div style={{ marginBottom: "0.5rem" }}>
-            <Label>Recommended Prompts:</Label>
-          </div>
-          <Row>
-            {prompts.map((prompt, index) => (
-              <Col
-                xs="4"
-                key={index}
-                style={{ marginBottom: "0.5rem", cursor: "pointer" }}
-                onClick={() => {
-                  handlePromptClick(prompt);
-                  document.getElementById("submitForm").click();
-                }}
-              >
-                <div
-                  style={{
-                    width: "400px",
-                    height: "40px",
-                    padding: "10px",
-                    border: "1px solid #ccc",
-                    borderRadius: "5px",
-                    cursor: "pointer",
-                    textDecoration: "underline",
-                    color: "blue",
-                  }}
-                >
-                  {prompt}
-                </div>
-              </Col>
-            ))}
-          </Row>
-        </div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "right",
+          justifyItems: "right",
+          margin: "1rem",
+        }}
+      >
+        <Instructions />
+        <Button
+          style={{ marginLeft: "1rem" }}
+          color="danger"
+          onClick={handleLogout}
+        >
+          Logout
+        </Button>
+      </div>
+      <Grid
+        Grid
+        container
+        flexDirection={"row"}
+        spacing={{ xs: 2, md: 3 }}
+        columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+      >
+        <Row style={{ display: "flex" }}>
+          <Col style={{ flex: 1 }}>
+            <Grid item xs={12} rowSpacing={1}>
+              <Label>Recommended Prompts:</Label>
+              <Stack direction="row" spacing={4}>
+                {prompts.map((prompt, index) => (
+                  <Row
+                    xs="4"
+                    key={index}
+                    style={{ marginBottom: "0.5rem", cursor: "pointer" }}
+                    onClick={() => {
+                      handlePromptClick(prompt);
+                      document.getElementById("submitForm").click();
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "100%",
+                        height: "auto",
+                        padding: "10px",
+                        border: "1px solid #ccc",
+                        borderRadius: "5px",
+                        cursor: "pointer",
+                        textDecoration: "underline",
+                        color: "blue",
+                      }}
+                    >
+                      {prompt}
+                    </div>
+                  </Row>
+                ))}
+              </Stack>
+            </Grid>
 
-        <Form id="submitForm" onSubmit={handleFormSubmit}>
-          <FormGroup>
-            <div style={{ marginBottom: "0.5rem" }}>
-              <Label>Enter you prompt:</Label>
-            </div>
-            <Input
-              style={{ width: "400px", height: "40px" }}
-              type="textarea"
-              value={inputText}
-              onChange={handleInputChange}
-              placeholder="Enter text"
-            />
-          </FormGroup>
-          <div  className="btn-container"  style={{ marginBottom: "0.5rem" }}>
-            <Button type="submit" color="primary">
-              Submit
-            </Button>
-          </div>
-        </Form>
-
-        {renderAccordionItems()}
-
-        {/* Display the result in a textarea only if results exist */}
-        {result && (
-          <div>
-            <div style={{ marginBottom: "0.5rem" }}>
-              <Label>Result</Label>
-            </div>
-            <textarea
-              style={{ width: "400px" }}
-              readOnly
-              rows="10"
-              value={result
-                .map((item, index) => `${index + 1}. ${item}`)
-                .join("\n")}
-            />
-          </div>
-        )}
-      </Row>
-      
-    </div>
+            {/* Column 2 for Form */}
+            <Grid item xs={12}>
+              <Form id="submitForm" onSubmit={handleFormSubmit}>
+                <FormGroup>
+                  <div style={{ marginBottom: "0.5rem" }}>
+                    <Label>Enter your prompt:</Label>
+                  </div>
+                  <Input
+                    style={{ width: "100%", height: "auto" }}
+                    type="textarea"
+                    value={inputText}
+                    onChange={handleInputChange}
+                    placeholder="Enter text"
+                  />
+                </FormGroup>
+                <Button type="submit" color="primary">
+                  Submit
+                </Button>
+              </Form>
+            </Grid>
+          </Col>
+        </Row>
+        <Row style={{ display: "flex" }}>
+          <Col>
+            <Grid item xs={12}>
+              <Item>
+                {accordionData && renderAccordionItems()}
+                {pieData && renderPieItems()}
+                {/* OR */}
+                {/* {renderAccordionItems()} */}
+                {/* OR */}
+                {tableData && renderTableItems()}
+                {/* OR */}
+                {barData && renderLineItems()}
+                {/* OR */}
+                {LineData && renderBarItems()}
+              </Item>
+              {/* {result && (
+                <Item>
+                  <div>
+                    <div style={{ marginBottom: "0.5rem" }}>
+                      <Label>Result</Label>
+                    </div>
+                    <textarea
+                      style={{ width: "400px" }}
+                      readOnly
+                      rows="10"
+                      value={
+                        Array.isArray(result) // Check if result is an array
+                          ? result
+                              .map((item, index) => `${index + 1}. ${item}`)
+                              .join("\n")
+                          : result.substring(1)
+                      } // If not an array, use the result as is
+                    />
+                  </div>
+                </Item>
+              )} */}
+            </Grid>
+          </Col>
+        </Row>
+      </Grid>
+      <ToastContainer />
     </div>
   );
 }

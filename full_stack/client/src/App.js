@@ -1,21 +1,66 @@
 // LoginRegisterPage.jsx
 import axios from "axios";
 import React, { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
-// import "react-toastify/dist/ReactToastify.css";
-import { Button, Container, Form, FormGroup, Input } from "reactstrap";
+import "react-toastify/dist/ReactToastify.css";
+import { Container, Form, FormGroup, Input } from "reactstrap";
+import { styled } from "@mui/material/styles";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
+import { purple } from "@mui/material/colors";
+import TextField from "@mui/material/TextField";
+
 import "./LoginRegisterPage.css"; // Import the CSS file for styling
+
 const LoginRegisterPage = (props) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isLoggedIn, setLoggedIn] = useState(false);
   const [loginError, setLoginError] = useState(false); // State for login error
   const [emptyInputError, setEmptyInputError] = useState(false); // State for empty input error
+  const [openModal, setOpenModal] = useState(false); // State to control modal
+
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
+  });
+
+  const BootstrapButton = styled(Button)({
+    boxShadow: "none",
+    textTransform: "none",
+    fontSize: 12,
+    padding: "6px 12px",
+    border: "1px solid",
+    lineHeight: 1.5,
+    backgroundColor: "#0063cc",
+    borderColor: "#0063cc",
+    fontFamily: [
+      "-apple-system",
+      "BlinkMacSystemFont",
+      '"Segoe UI"',
+      "Roboto",
+      '"Helvetica Neue"',
+      "Arial",
+      "sans-serif",
+      '"Apple Color Emoji"',
+      '"Segoe UI Emoji"',
+      '"Segoe UI Symbol"',
+    ].join(","),
+    "&:hover": {
+      backgroundColor: "#0069d9",
+      borderColor: "#0062cc",
+      boxShadow: "none",
+    },
+    "&:active": {
+      boxShadow: "none",
+      backgroundColor: "#0062cc",
+      borderColor: "#005cbf",
+    },
+    "&:focus": {
+      boxShadow: "0 0 0 0.2rem rgba(0,123,255,.5)",
+    },
   });
 
   // const handleLogin = () => {
@@ -49,7 +94,6 @@ const LoginRegisterPage = (props) => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    navigate("/recruit");
     try {
       const response = await axios.post(
         "http://localhost:5000/login",
@@ -67,9 +111,7 @@ const LoginRegisterPage = (props) => {
         props.setToken(access_token);
 
         // Save the token to local storage
-        localStorage.setItem("token", access_token);
-
-        // Navigate to the "/recruit" route
+        localStorage.setItem("token", access_token); // Navigate to the "/recruit" route
         navigate("/recruit");
       } else {
         console.log(message);
@@ -90,21 +132,10 @@ const LoginRegisterPage = (props) => {
   };
 
   return (
-  <div>
-    <div>
-    <div class="container">
-            <nav class="topnav">
-                <ul>
-                    <li>SMART RECRUITMENT TOOL</li>
-                </ul>
-            </nav>
-            <img className="logo" src={"https://upload.wikimedia.org/wikipedia/commons/9/91/Brillio_company_logo.png"} />        </div>
-    </div>
-    <div>
     <div className="login-register-page">
       <Container>
         <Form className="login-register-form">
-        <h1 className="login-heading">Login</h1>
+          <h1>Login</h1>
           {/* {emptyInputError && (
             <Alert color="danger">
               Please enter both username and password.
@@ -116,7 +147,8 @@ const LoginRegisterPage = (props) => {
           <FormGroup
             className={`custom-input ${emptyInputError ? "error" : ""}`}
           >
-            <Input className="input-box"
+            <TextField
+              id="outlined-required"
               style={{ marginBottom: "0.5rem" }}
               type="text"
               value={formData.email}
@@ -129,7 +161,8 @@ const LoginRegisterPage = (props) => {
           <FormGroup
             className={`custom-input ${emptyInputError ? "error" : ""}`}
           >
-            <Input className="input-box"
+            <TextField
+              id="outlined-password-input"
               style={{ margin: "0.5rem" }}
               type="password"
               value={formData.password}
@@ -140,23 +173,31 @@ const LoginRegisterPage = (props) => {
             />
           </FormGroup>
           <div>
-            <Button
-              className="btn-primary"
-              color="primary"
-              onClick={handleLogin}
-            >
-              Login
-            </Button>
-            <Button color="secondary" onClick={handleRegister}>
+            <Button onClick={handleRegister} color="error">
               Register
             </Button>
+            <BootstrapButton
+              style={{ marginLeft: "12rem", marginRight: "0.5rem" }}
+              onClick={handleLogin}
+              variant="contained"
+              disableRipple
+            >
+              Login
+            </BootstrapButton>
+
+            {/* <Button
+              
+            >
+              Login
+            </Button> */}
+            {/* <Button color="secondary" >
+              Register
+            </Button> */}
           </div>
         </Form>
       </Container>
       <ToastContainer />
     </div>
-    </div>
-  </div>
   );
 };
 

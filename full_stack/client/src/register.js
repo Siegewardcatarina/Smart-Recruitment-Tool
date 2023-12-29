@@ -2,6 +2,8 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "./Register.css";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -10,7 +12,6 @@ const Register = () => {
     number: "",
     password: "",
     confirm_password: "",
-    // csrf_token: "", // Include CSRF token in the form state
   });
   const navigate = useNavigate();
 
@@ -21,23 +22,40 @@ const Register = () => {
     });
   };
 
+  const validateEmail = (email) => {
+    // Add your email validation logic here
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validatePassword = (password) => {
+    // Password must be at least 8 characters and contain one capital letter or special character
+    const passwordRegex = /^(?=.*[A-Z!@#$%^&*()_+{}|:"<>?])[\S]{8,}$/;
+    return passwordRegex.test(password);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const { email, password } = formData;
+
+    if (!validateEmail(email)) {
+      toast.error("Invalid email address");
+      return;
+    }
+
+    if (!validatePassword(password)) {
+      toast.error("Password must be at least 8 characters and contain one capital letter or special character");
+      return;
+    }
+
     try {
-      // const csrfResponse = await axios.get("http://localhost:5000/csrf_token");
-      // const csrfToken = csrfResponse.data.csrf_token;
-      // const formDataWithCSRF = {
-      //   ...formData,
-      //   csrf_token: csrfToken,
-      // };
       const response = await axios.post(
         "http://localhost:5000/register",
-        formData, // Use formDataWithCSRF instead of formData
+        formData,
         {
           headers: {
             "Content-Type": "application/json",
-            // "X-CSRFToken": csrfToken, // Include the CSRF token in the headers
           },
         }
       );
@@ -50,68 +68,91 @@ const Register = () => {
   };
 
   return (
-    <div>
-      <h1>Registration</h1>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="name">Name:</label>
-        <input
-          type="text"
-          id="name"
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
-          required
-        />
-
-        <label htmlFor="email">Email:</label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-
-        <label htmlFor="number">Phone Number:</label>
-        <input
-          type="text"
-          id="number"
-          name="number"
-          value={formData.number}
-          onChange={handleChange}
-          required
-        />
-
-        <label htmlFor="password">Password:</label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
-
-        <label htmlFor="confirm_password">Confirm Password:</label>
-        <input
-          type="password"
-          id="confirm_password"
-          name="confirm_password"
-          value={formData.confirm_password}
-          onChange={handleChange}
-          required
-        />
-
+    <div className="register-container">
+      <h1 className="big-font">Registration</h1>
+      <form onSubmit={handleSubmit} className="form-box">
+        <div className="form-group">
+          <label htmlFor="name">Enter Your Name</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+          />
+        </div>
+  
+        <div className="form-group">
+          <label htmlFor="email">Enter Your Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
+        </div>
+  
+        <div className="form-group">
+          <label htmlFor="number">Phone Number</label>
+          <input
+            type="text"
+            id="number"
+            name="number"
+            value={formData.number}
+            onChange={handleChange}
+            required
+          />
+        </div>
+  
+        <div className="form-group">
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+          />
+        </div>
+  
+        <div className="form-group">
+          <label htmlFor="confirm_password">Confirm Password</label>
+          <input
+            type="password"
+            id="confirm_password"
+            name="confirm_password"
+            value={formData.confirm_password}
+            onChange={handleChange}
+            required
+          />
+        </div>
+  
+  
         <button type="submit">Register</button>
-      </form>
+        
+      
 
+      </form>
+  
       <p>
-        Already have an account? <a href="/">Log in here</a>.
+        Already have an account? 
       </p>
+      <div className="button-group">
+        <button type="button" onClick={() => navigate("/")}>
+          Log in here
+        </button>
+      </div>
+
+      
+      
       <ToastContainer />
     </div>
   );
+  
 };
 
 export default Register;

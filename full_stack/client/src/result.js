@@ -211,8 +211,8 @@ function Result(props) {
             console.log(answerText);
             setResult(answerText);
             const newAccordionData = [
-              ...accordionData,
               { prompt: inputText, result: answerText },
+              ...accordionData,
             ];
             setAccordionData(newAccordionData);
             console.log(accordionData);
@@ -442,17 +442,19 @@ function Result(props) {
                   <div style={{ marginBottom: "0.5rem" }}>
                     <Label>Enter your prompt:</Label>
                   </div>
+                  <div style={{display: "flex"}}>
                   <Input
-                    style={{ width: "100%", height: "auto" }}
+                    style={{ width: "60%",marginRight : "12px", height: "auto" }}
                     type="textarea"
                     value={inputText}
                     onChange={handleInputChange}
                     placeholder="Enter text"
                   />
+                  <Button type="submit" color="primary">
+                    Submit
+                  </Button>
+                  </div>
                 </FormGroup>
-                <Button type="submit" color="primary">
-                  Submit
-                </Button>
               </Form>
             </Grid>
           </Col>

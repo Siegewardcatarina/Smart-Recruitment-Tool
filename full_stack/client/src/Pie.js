@@ -1,4 +1,5 @@
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { colors } from "@mui/material";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -60,7 +61,7 @@ const MyChart = ({ piedata, input }) => {
   if (!pieData) {
     return null; // Return null if pieData is not yet available
   }
-
+ 
   return (
     <div style={{ display: "flex" }}>
       <div>
@@ -79,15 +80,15 @@ const MyChart = ({ piedata, input }) => {
                   <Typography>{entry.prompt}</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                  <PieChart width={730} height={250}>
+                  <PieChart width={1150} height={300} colors={['#82ca9d', '#f56565', '#43a047']}>
                     <Pie
                       data={entry.data}
                       dataKey="value"
                       nameKey="name"
                       cx="50%"
                       cy="50%"
-                      innerRadius={60}
-                      outerRadius={80}
+                      innerRadius={20}
+                      outerRadius={110}
                       fill="#82ca9d"
                       label
                     />

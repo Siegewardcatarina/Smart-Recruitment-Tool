@@ -13,6 +13,7 @@ const Line = ({ linedata, input }) => {
   const [expanded, setExpanded] = React.useState([]);
 
   console.log(linedata);
+  //linedata=linedata[0];
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded((prevExpanded) => {
       const newExpanded = [...prevExpanded];
@@ -48,11 +49,12 @@ const Line = ({ linedata, input }) => {
                 </AccordionSummary>
                 <AccordionDetails>
                   <BarChart
-                    xAxis={[{ scaleType: "band", data: entry.data.columns }]}
-                    // series={[{ data: entry.data.data.map((item) => item[1]) }]}
-                    series={[{ data: entry.data.data }]}
-                    width={500}
+                    xAxis={[{ scaleType: "band", data: entry.data.data.map((item) => item[0])}]}
+                    series={[{ data: entry.data.data.map((item) => item[1]) }]}
+                    //series={[{ data: entry.data.data[0] }]}
+                    width={1150}
                     height={300}
+                    colors={['#515bb5']}
                   />
                 </AccordionDetails>
               </Accordion>

@@ -25,16 +25,14 @@ from flask_jwt_extended import create_access_token,get_jwt,get_jwt_identity,unse
 # from secret import OPENAI_API_KEY
 from langchain.llms import OpenAI
 from langchain_experimental.agents.agent_toolkits import create_csv_agent
-
+from model.endpoint import web_point
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})  # Allow requests from localhost:3000
 
 
 
-# Set up your OpenAI API key
-key = "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"
-os.environ["OPENAI_API_KEY"] = key
+
 dataset = "./dataset/Employee.csv"
 
 # Set up conversation memory
@@ -239,70 +237,14 @@ def logout():
     response = jsonify({"msg": "logout successful"})
     unset_jwt_cookies(response)
     return response
-def create_agent():
 
-    #LLM
-    llm = OpenAI(temperature = 0)
-
-    #Dataset
-    dataset = "dataset\Employee.csv"
-
-    #Creates the agent on function call with llm and dataset provided
-    return create_csv_agent(llm,dataset,verbose=False)
-
-def query():
-    data = request.get_json()
-    text = data['text']
-    # Collect user query
-    # print("Enter Query Below : ")
-    # query = input()
-
-    # Add it with Pre-made prompt to get result in specific format
-    prompt = (
-        """
-            For the following query, if it requires drawing a table, reply as follows:
-            {"table": {"columns": ["column1", "column2", ...], "data": [[value1, value2, ...], [value1, value2, ...], ...]}}
-
-            If the query requires creating a bar chart, reply as follows:
-            {"bar": {"columns": ["A", "B", "C", ...], "data": [25, 24, 10, ...]}}
-
-            If the query requires creating a line chart, reply as follows:
-            {"line": {"columns": ["A", "B", "C", ...], "data": [25, 24, 10, ...]}}
-
-            If the query requires creating a pie chart, reply as follows:
-            {"pie": {"columns": ["A", "B", "C", ...], "data": [25, 24, 10, ...]}}
-
-            There can only be three types of chart, "pie", "bar" and "line".
-
-            If it is just asking a question that requires none, reply as follows:
-            {"answer": "answer"}
-            Example:
-            {"answer": "The title with the highest rating is 'Gilead'"}
-
-            If you do not know the answer, reply as follows:
-            {"answer": "I do not know."}
-
-            Return all output as a string.
-            If there is no "columns" list, display output in format given else,
-            All strings in "columns" list and data list, should be in double quotes,
-
-            For example: {"columns": ["title", "ratings_count"], "data": [["Gilead", 361], ["Spider's Web", 5164]]}
-
-            Lets think step by step.
-
-            Below is the query.
-            Query: 
-            """
-        + text
-    )
-    return prompt
-
-
+    
 def process_text():
     try:
-        agent = create_agent()
+        data = request.get_json()
+        text = data['text']
     # Run the prompt through the agent.
-        response = agent.run(query())
+        response = web_point(text)
     # Convert the response to a string.
         print(response)
         print('The given result is \n', response)
@@ -312,7 +254,7 @@ def process_text():
             'total_length': len(response)
         }
         # Return the result as JSON response
-        return jsonify(response_data)  
+        return jsonify(response_data)
     except Exception as e:
         # Handle exceptions (e.g., rate limit errors)
         print(f"Error processing query: {str(e)}")

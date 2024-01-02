@@ -82,3 +82,29 @@ What are the unique roles of those 22 employees?
 ```
 The unique roles of the 22 employees in Mumbai are AI/ML architect, Security Analyst, Data scientist, Cyber security, Frontend developer, Blockchain engineer, IoT solutions architect, HR, DevOps engineer, Machine learning engineer, and Cloud architect.
 ```
+
+## Starting the project
+
+1. Setup virtual environment https://medium.com/@dipan.saha/managing-git-repositories-with-vscode-setting-up-a-virtual-environment-62980b9e8106
+
+2. Create Secret file with below content
+
+   full_stack\server\secret.py
+
+   ```
+   key="OPEN API KEY"
+   path="dataset/Employee.csv"
+   ```
+
+3. Start Client
+
+   ```
+   cd full_stack\client
+   npm run start
+   ```
+4. Start Python Web Server
+
+   ```
+   cd full_stack\server
+   flask run
+   ```

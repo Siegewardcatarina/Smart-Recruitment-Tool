@@ -1,3 +1,4 @@
+
 import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -184,7 +185,7 @@ function Result(props) {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
       const response = await axios.post(
         "http://localhost:5000/process_text",
@@ -198,16 +199,16 @@ function Result(props) {
           },
         }
       );
+      console.log(response.type)
       console.log(response.data.result);
       if (response.data.result !== undefined) {
+        console.log("HHII")
         let resultString = response.data.result;
         console.log(resultString); // Change variable name to avoid confusion
-        if (typeof response.data.result === "string") {
-          if (resultString.startsWith('{"answer": "')) {
-            const answerText = resultString.substring(
-              11,
-              resultString.length - 2
-            );
+        if (typeof resultString === "object") {
+          console.log(resultString)
+          if (resultString.hasOwnProperty("answer")) {
+            const answerText = String(resultString.answer)
             console.log(answerText);
             setResult(answerText);
             const newAccordionData = [
@@ -217,15 +218,14 @@ function Result(props) {
             setAccordionData(newAccordionData);
             console.log(accordionData);
           }
-          if (resultString.startsWith('{"table":')) {
-            console.log(resultString);
-            const parsedData = JSON.parse(resultString);
+          if (resultString.hasOwnProperty("table")) {
+            console.log(resultString.table.answer.columns);
             // console.log(parsedData);
-            const cols = parsedData.table.columns;
-            const rows = parsedData.table.data;
-            // console.log(cols);
+            const cols = resultString.table.answer.columns;
+            const rows = resultString.table.answer.data;
+            console.log(rows);
             setColumns(cols);
-            const ROW = parsedData.table.data.map((row, index) => ({
+            const ROW = resultString.table.answer.data.map((row, index) => ({
               id: index + 1,
               ...Object.fromEntries(
                 cols.map((col, i) => [
@@ -243,22 +243,21 @@ function Result(props) {
               { prompt: inputText, row: ROW, column: cols },
             ]);
           }
-          if (resultString.startsWith('{"pie":')) {
-            const parsedData = JSON.parse(resultString);
-            console.log(parsedData);
+          if (resultString.hasOwnProperty("pie")) {
+            let ans=resultString.pie.answer;
             // Extract the data array from the parsed JSON
-            const originalData = parsedData.pie;
-            const columns = parsedData.pie.columns;
-            const data = parsedData.pie.data;
-
-            console.log(originalData);
-
+            const originalData = resultString.pie;
+            const columns = ans.columns;
+            const data = ans.data;
+            
+            console.log(columns);
+  
             // Create a new formatted array
             const formattedData = data.map((entry) => ({
               name: entry[0], // Use the first element as the "name"
-              value: entry[1] * 100, // Use the second element as the "value" (adjusted by a multiplier if needed)
+              value: entry[1] , // Use the second element as the "value" (adjusted by a multiplier if needed)
             }));
-
+  
             console.log(formattedData);
             setInputPrompt(inputText);
             setPieData((prevPieData) => [
@@ -267,24 +266,32 @@ function Result(props) {
             ]);
             console.log(pieData);
           }
-          if (resultString.startsWith('{"bar":')) {
-            const parsedData = JSON.parse(resultString);
-            console.log(parsedData);
+          if (resultString.hasOwnProperty("bar")) {
+            console.log("PI kKK ")
+            const ans = resultString.bar.answer;
+          
             // Extract the data array from the parsed JSON
-            const originalData = parsedData.bar;
+            const originalData=resultString.bar.answer;
+            let data=ans.data;
+            // Create a new formatted array
             console.log(originalData);
+            const formattedData = data.map((entry) => ({
+              name: entry[0], // Use the first element as the "name"
+              value: entry[1] , // Use the second element as the "value" (adjusted by a multiplier if needed)
+            }));
             // Create a new formatted array
             setLineData((prevBarData) => [
               ...prevBarData,
-              { prompt: inputText, data: originalData },
+              { prompt: inputText, data: originalData},
             ]);
-            console.log(LineData);
+            //console.log(LineData);
           }
-          if (resultString.startsWith('{"line":')) {
-            const parsedData = JSON.parse(resultString);
-            console.log(parsedData);
+          if (resultString.hasOwnProperty("line")) {
+            console.log("line kkk")
+            //const parsedData = JSON.parse(resultString);
+            //console.log(parsedData);
             // Extract the data array from the parsed JSON
-            const originalData = parsedData.line;
+            const originalData = resultString.line.answer;
             console.log(originalData);
             // Create a new formatted array
             // setBarData(originalData);
@@ -310,7 +317,6 @@ function Result(props) {
       );
     }
   };
-
   const renderAccordionItems = () => {
     if (accordionData && accordionData.length > 0) {
       return <ControlledAccordions accordionData={accordionData} />;
@@ -370,9 +376,9 @@ function Result(props) {
 
   const prompts = [
     "Click on the question Icon for instructions",
-    "Give me names of employees from bangalore.",
-    "Give me names of employees whose role is AI/ML architect with 3 years experience",
-    "Give me number of employees whose stay in Jaipur",
+    "Table the names and email of employees from bangalore.",
+    "Pie chart of number of employees based on their location",
+    "Bar Chart of number of employees in each location based on their role",
     // "Create a table where you give me the name of employees and experience of employees whose role is Cyber security and location is bangalore",
   ];
   return (
@@ -387,7 +393,7 @@ function Result(props) {
       >
         <Instructions />
         <Button
-          style={{ marginLeft: "1rem" }}
+          style={{ marginLeft: "1rem", backgroundColor:'#cf1338'}}
           color="danger"
           onClick={handleLogout}
         >
@@ -442,18 +448,18 @@ function Result(props) {
                   <div style={{ marginBottom: "0.5rem" }}>
                     <Label>Enter your prompt:</Label>
                   </div>
-                  <div style={{display: "flex"}}>
+                  <div style={{display:"flex"}}>
                   <Input
-                    style={{ width: "60%",marginRight : "12px", height: "auto" }}
+                    style={{ width: "90%",marginRight:"12px", height: "auto" }}
                     type="textarea"
                     value={inputText}
                     onChange={handleInputChange}
-                    placeholder="Enter text"
+                    placeholder="Enter Your Query"
                   />
-                  <Button type="submit" color="primary">
-                    Submit
-                  </Button>
-                  </div>
+                <Button type="submit" style={{background:'#7dff69',paddingRight:'20px',paddingLeft:'20px', borderRadius:'20px'}}>
+                  Submit
+                </Button>
+                </div>
                 </FormGroup>
               </Form>
             </Grid>

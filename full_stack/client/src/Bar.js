@@ -5,7 +5,7 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
-import { LineChart } from "@mui/x-charts/LineChart";
+import { LineChart,Line,xAxis} from "@mui/x-charts/LineChart";
 import React, { useState } from "react";
 
 const Bar = ({ barData, input }) => {
@@ -53,10 +53,11 @@ const Bar = ({ barData, input }) => {
                 </AccordionSummary>
                 <AccordionDetails>
                   <LineChart
-                    xAxis={[{ data: entry.data.data.map((item) => item[0]) }]}
-                    series={[{ data: entry.data.data.map((item) => item[1]) }]}
-                    width={500}
+                    xAxis={[{ scaleType:"point",data: entry.data.data.map((item) => item[0])}]}
+                    series={[{ data: entry.data.data.map((item) => item[1]) ,color:['red']}]}
+                    width={1150}
                     height={300}
+                    color={['red']}
                   />
                 </AccordionDetails>
               </Accordion>

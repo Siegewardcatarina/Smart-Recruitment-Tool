@@ -51,28 +51,13 @@ export default function Instructions() {
         </IconButton>
         <DialogContent dividers>
           <Typography gutterBottom>
-            1.This application was created particularly for the Candidate
-            dataset, which includes the following information: candidate number,
-            first and last names, phone number, age, experience, email, role,
-            location, and skill sets. 2. To begin querying any questions you may
-            have about the dataset, simply type your query in the query field
-            and click Submit to begin the query's execution. 3. Please include
-            context and examples as needed to support the model's
-            decision-making process in order to obtain accurate results. 4. Give
-            specific instructions in the prompt, such as "Create a pie chart,
-            display percentage of employees of each role throughout the
-            dataset," if you want the output in a certain format, such as a bar
-            chart, pie chart, or line chart. 5. To get the output as a table,
-            please specify so in the prompt clearly for the model to understand.
-            For eg. “Tabulate the first 5 roles. Include the roles and the
-            number of employees in each of these roles only.” 6. In rare
-            circumstances, the model might produce undesirable results. In these
-            cases, please reload the page and rewrite the prompt; it is advised
-            to include more context. 7. Refer to the example queries and try to
-            frame any queries you have similarly for better results. 8. It is
-            advised to request data in smaller chunks rather than all at once in
-            order to gain access to it in situations where the query's output is
-            restricted by a token limit.
+          1. To begin querying simply type in your query into the textbox and click submit. you query can be anything regarding the dataset for eg. “How many candidates are from Pune?”
+          </Typography>
+          <Typography>
+          2. If a table, pie chart, bar chart, or line chart would better suit the queries you have, kindly add the same in the query, for.eg. “Table the names, email and phone number of candidates from Bangalore”
+          </Typography>
+          <Typography>
+          3. Your previous results will be displayed in the accordion boxes below the text box in the order of newest first.
           </Typography>
         </DialogContent>
         <DialogActions>

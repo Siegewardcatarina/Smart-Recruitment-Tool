@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Container, Form, FormGroup, Input } from "reactstrap";
+// import "./login_registers.css" 
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
@@ -63,34 +64,6 @@ const LoginRegisterPage = (props) => {
     },
   });
 
-  // const handleLogin = () => {
-  //   // Check if the entered credentials are valid
-  //   if (!username || !password) {
-  //     // Check for empty inputs
-  //     setEmptyInputError(true);
-  //     setLoginError(false);
-  //     toast.error("Please enter both username and password.");
-  //     console.log("Please enter both username and password.");
-  //     return;
-  //   }
-
-  //   if (username === "admin" && password === "admin123") {
-  //     setLoggedIn(true);
-  //     setLoginError(false);
-  //     setEmptyInputError(false);
-  //     // Handle any additional logic for a successful login
-  //     console.log("Successfully logged in!");
-  //     navigate("/recruit");
-  //     toast.success("Welcome! You have successfully logged in.");
-  //   } else {
-  //     // Handle invalid login
-  //     setLoginError(true);
-  //     setEmptyInputError(false);
-  //     toast.warning("Invalid credentials. Please try again.");
-  //     console.log("Invalid credentials. Please try again.");
-  //   }
-  // };
-
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -135,7 +108,7 @@ const LoginRegisterPage = (props) => {
     <div className="login-register-page">
       <Container>
         <Form className="login-register-form">
-          <h1>Login</h1>
+          <h1 style = {{color: "#12192c"}}>Login</h1>
           {/* {emptyInputError && (
             <Alert color="danger">
               Please enter both username and password.
@@ -184,15 +157,6 @@ const LoginRegisterPage = (props) => {
             >
               Login
             </BootstrapButton>
-
-            {/* <Button
-              
-            >
-              Login
-            </Button> */}
-            {/* <Button color="secondary" >
-              Register
-            </Button> */}
           </div>
         </Form>
       </Container>

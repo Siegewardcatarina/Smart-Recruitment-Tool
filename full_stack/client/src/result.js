@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { Button, Col, Form, FormGroup, Input, Label, Row } from "reactstrap";
-// import "./App.css";
+import "./App.css";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Unstable_Grid2";
 import { styled } from "@mui/material/styles";
@@ -371,14 +371,14 @@ function Result(props) {
   };
 
   const prompts = [
-    "Click on the question Icon for instructions",
+    "How many Candidates are from Mumbai?",
     "Table the names and email of employees from bangalore.",
     "Pie chart of number of employees based on their location",
     "Bar Chart of number of employees in each location based on their role",
     // "Create a table where you give me the name of employees and experience of employees whose role is Cyber security and location is bangalore",
   ];
   return (
-    <div>
+    <div style = {{margin: "1rem"}}>
       <div
         style={{
           display: "flex",
@@ -403,7 +403,7 @@ function Result(props) {
         spacing={{ xs: 2, md: 3 }}
         columnSpacing={{ xs: 1, sm: 2, md: 3 }}
       >
-        <Row style={{ display: "flex" }}>
+        <Row style={{ display: "flex" , margin: "1rem" }}>
           <Col style={{ flex: 1 }}>
             <Grid item xs={12} rowSpacing={1}>
               <Label>Recommended Prompts:</Label>
@@ -461,45 +461,50 @@ function Result(props) {
             </Grid>
           </Col>
         </Row>
-        <Row style={{ display: "flex" }}>
-          <Col>
-            <Grid item xs={12}>
+        
+        {accordionData && 
+        pieData && 
+        tableData &&
+        barData &&
+        LineData && (<Row style={{ display: "flex" }}>
+        <Col>
+          <Grid item xs={12}>
+            <Item>
+              {accordionData && renderAccordionItems()}
+              {pieData && renderPieItems()}
+              {/* OR */}
+              {/* {renderAccordionItems()} */}
+              {/* OR */}
+              {tableData && renderTableItems()}
+              {/* OR */}
+              {barData && renderLineItems()}
+              {/* OR */}
+              {LineData && renderBarItems()}
+            </Item>
+            {/* {result && (
               <Item>
-                {accordionData && renderAccordionItems()}
-                {pieData && renderPieItems()}
-                {/* OR */}
-                {/* {renderAccordionItems()} */}
-                {/* OR */}
-                {tableData && renderTableItems()}
-                {/* OR */}
-                {barData && renderLineItems()}
-                {/* OR */}
-                {LineData && renderBarItems()}
-              </Item>
-              {/* {result && (
-                <Item>
-                  <div>
-                    <div style={{ marginBottom: "0.5rem" }}>
-                      <Label>Result</Label>
-                    </div>
-                    <textarea
-                      style={{ width: "400px" }}
-                      readOnly
-                      rows="10"
-                      value={
-                        Array.isArray(result) // Check if result is an array
-                          ? result
-                              .map((item, index) => `${index + 1}. ${item}`)
-                              .join("\n")
-                          : result.substring(1)
-                      } // If not an array, use the result as is
-                    />
+                <div>
+                  <div style={{ marginBottom: "0.5rem" }}>
+                    <Label>Result</Label>
                   </div>
-                </Item>
-              )} */}
-            </Grid>
-          </Col>
-        </Row>
+                  <textarea
+                    style={{ width: "400px" }}
+                    readOnly
+                    rows="10"
+                    value={
+                      Array.isArray(result) // Check if result is an array
+                        ? result
+                            .map((item, index) => `${index + 1}. ${item}`)
+                            .join("\n")
+                        : result.substring(1)
+                    } // If not an array, use the result as is
+                  />
+                </div>
+              </Item>
+            )} */}
+          </Grid>
+        </Col>
+      </Row>)}
       </Grid>
       <ToastContainer />
     </div>

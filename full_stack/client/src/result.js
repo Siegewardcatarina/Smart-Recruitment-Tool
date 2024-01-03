@@ -10,12 +10,12 @@ import Grid from "@mui/material/Unstable_Grid2";
 import { styled } from "@mui/material/styles";
 import ControlledAccordions from "./ControlledAccordions";
 import Instructions from "./Instructions";
-// import "./LoginRegisterPage.css";
 import { Stack } from "@mui/material";
 import Bar from "./Bar";
 import Line from "./Line";
 import MyChart from "./Pie";
 import Example from "./Table";
+import "./result.css"
 
 function Result(props) {
   const [inputText, setInputText] = useState("");
@@ -378,7 +378,7 @@ function Result(props) {
     // "Create a table where you give me the name of employees and experience of employees whose role is Cyber security and location is bangalore",
   ];
   return (
-    <div style = {{margin: "1rem"}}>
+    <div className="result-page">
       <div
         style={{
           display: "flex",

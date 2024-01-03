@@ -11,8 +11,7 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #12192c;
-  /* background-image: url("https://careers.brillio.com/wp-content/themes/brilliotheme/assets/why_brillionew-scaled.jpg"); */
+  background-image: url("https://careers.brillio.com/wp-content/themes/brilliotheme/assets/why_brillionew-scaled.jpg");
   /* Replace with your image URL */
   background-size: cover;
 }

@@ -1,41 +1,47 @@
-
-body{
+.register-container {
   font-family: 'Work Sans', sans-serif;
   line-height: 1.6;
   margin: 0;
   padding: 0;
   background: linear-gradient(135deg, #ff6b6b, #556270);
   color: #fff;
-background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-background-size: 400% 400%;
-animation: gradient 15s ease infinite;
-height: 100vh;
+  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+  height: 100vh;
 }
+
 @keyframes gradient {
-0% {
-  background-position: 0% 50%;
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
 }
-50% {
-  background-position: 100% 50%;
-}
-100% {
-  background-position: 0% 50%;
-}
-}
-.faq-heading{
+
+.faq-heading {
   border-bottom: #777;
   padding: 20px 60px;
 }
-.faq-container{
-display: flex;
-justify-content: center;
-flex-direction: column;
+
+.faq-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
 
 }
-.hr-line{
-width: 60%;
-margin: auto;
+
+.hr-line {
+  width: 60%;
+  margin: auto;
 }
+
 /* Style the buttons that are used to open and close the faq-page body */
 .faq-page {
   /* background-color: #eee; */
@@ -49,13 +55,14 @@ margin: auto;
   margin: auto;
 
 }
-.faq-body{
+
+.faq-body {
   margin: auto;
-color: #444;
-  /*text-align: center;*/ 
-border: none;
-width : 60%; 
- 
+  color: #444;
+  /*text-align: center;*/
+  border: none;
+  width: 60%;
+
 }
 
 
@@ -92,7 +99,8 @@ width : 60%;
 }
 
 .big-font {
-  font-size: 2em; /* Adjust the font size as needed */
+  font-size: 2em;
+  /* Adjust the font size as needed */
 }
 
 .form-box {
@@ -112,10 +120,12 @@ label {
   display: block;
   margin-bottom: 5px;
 }
+
 .input-group {
   display: flex;
   gap: 10px;
 }
+
 input {
   width: 100%;
   padding: 8px;

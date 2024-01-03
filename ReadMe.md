@@ -80,7 +80,7 @@ The unique roles of the 22 employees in Mumbai are AI/ML architect, Security Ana
 
    ```
    python3 -m venv .venv
-   source .venv/bin/activate
+   .\.venv\Scripts\Activate.ps1
    ```
 
    #### Installation 

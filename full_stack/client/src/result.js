@@ -83,7 +83,6 @@ function Result(props) {
     setInputText(prompt);
     try {
       const token = localStorage.getItem("token"); // Replace 'yourTokenKey' with the actual key you use to store the token
-      console.log(token);
       const response = await axios.post(
         "http://localhost:5000/process_text",
         {
@@ -332,9 +331,6 @@ function Result(props) {
       return (
         <Example
           data={tableData}
-          input={inputPrompt}
-          rows={rowd}
-          columns={columns}
         />
       );
     } else {

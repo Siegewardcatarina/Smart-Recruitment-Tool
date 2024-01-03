@@ -27,18 +27,7 @@ The llm model being used is text-davinci-003, this is the newer and more capable
 
 [Langchain](https://python.langchain.com/docs/get_started/introduction) is the Framework used on this project and it allows the seamless integration between the LLM, i.e OpenAI API and the dataset.
 
-### Virtual Environment
 
-```
-python3 -m venv .venv
-source .venv/bin/activate
-```
-
-### Installation 
-
-```
-pip install -r requirements.txt
-```
 
 ## Sample Output
 
@@ -87,6 +76,19 @@ The unique roles of the 22 employees in Mumbai are AI/ML architect, Security Ana
 
 1. Setup virtual environment https://medium.com/@dipan.saha/managing-git-repositories-with-vscode-setting-up-a-virtual-environment-62980b9e8106
 
+   #### Virtual Environment
+
+   ```
+   python3 -m venv .venv
+   source .venv/bin/activate
+   ```
+
+   #### Installation 
+
+   ```
+   pip install -r requirements.txt
+   ```
+
 2. Create Secret file with below content
 
    full_stack\server\secret.py
@@ -100,6 +102,7 @@ The unique roles of the 22 employees in Mumbai are AI/ML architect, Security Ana
 
    ```
    cd full_stack\client
+   npm install
    npm run start
    ```
 4. Start Python Web Server

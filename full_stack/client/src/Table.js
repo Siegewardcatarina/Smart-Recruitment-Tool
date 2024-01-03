@@ -13,7 +13,7 @@ import React from "react";
 
 import { useMemo } from "react";
 
-const Example = ({ columns, rows, input, data }) => {
+const Example = ({ data }) => {
   const [expanded, setExpanded] = React.useState([]);
 
   // should be memoized or stable
@@ -35,7 +35,7 @@ const Example = ({ columns, rows, input, data }) => {
     color: theme.palette.text.secondary,
   }));
 
-  const renderedItems = data.map((entry, index) => {
+  return data.map((entry, index) => {
     const cols = entry.column || [];
     const row = entry.row || [];
 
@@ -77,8 +77,6 @@ const Example = ({ columns, rows, input, data }) => {
       </div>
     );
   });
-
-  return <>{renderedItems}</>;
 };
 
 export default Example;

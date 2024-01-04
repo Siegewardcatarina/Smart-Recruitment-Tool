@@ -3,7 +3,7 @@ import sys
 import os
 import pandas as pd
 from llama_index.query_engine import PandasQueryEngine
-from .secret import key, path
+from secret import key, path
 
 os.environ['OPENAI_API_KEY'] = key
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)

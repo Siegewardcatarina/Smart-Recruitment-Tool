@@ -466,7 +466,7 @@ function Result(props) {
         pieData && 
         tableData &&
         barData &&
-        LineData && (<Row  style = {accordionData.length ? { width: "-webkit-fill-available"} : {display:"none"}}>
+        LineData && (<Row >
         <Col>
           <Grid item xs={12}>
             <Item>
